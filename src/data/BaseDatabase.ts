@@ -28,4 +28,12 @@ export class BaseDatabase {
             BaseDatabase.connection = null;
         }
     }
+
+    protected convertIntToBoolean(value: number): boolean{
+        return value === 1;
+    }
+
+    protected convertBooleanToInt(value: boolean): number{
+        return value? 1: 0;
+    }
 }
