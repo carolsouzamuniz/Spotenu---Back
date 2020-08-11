@@ -1,5 +1,6 @@
 import { IdGenerator } from "../service/IdGenerator"
-import { Type } from "../model/User";
+import { Type, LoginInputDTO } from "../model/User";
+import { UserDatabase } from "../data/UserDatabase";
 
 export class UserBusiness {
     public async signup(
@@ -16,5 +17,12 @@ export class UserBusiness {
         const id = idGenerator.generate();
 
         return id;
+    }
+
+    public async getByEmail(input: LoginInputDTO){
+
+        const userDatabase = new UserDatabase();
+        const user = await userDatabase.getByEmail(input.email);
+
     }
 }

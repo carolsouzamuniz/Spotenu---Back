@@ -2,8 +2,9 @@ import { Response, Request } from "express";
 import { HashManager } from "../service/HashManager";
 import { UserBusiness } from "../business/UserBusiness";
 import { Authenticator } from "../service/Authenticator";
-import { UserInputDTO } from "../model/User";
+import { UserInputDTO, LoginInputDTO } from "../model/User";
 import { UserDatabase } from "../data/UserDatabase";
+import { BaseDatabase } from "../data/BaseDatabase";
 
 export class UserController{
 
@@ -67,5 +68,37 @@ export class UserController{
         } catch (error) {
             res.status(400).send({error: error.message});
         }
+        await BaseDatabase.destroyConnection();
+    }
+
+    public async login(req: Request, res: Response){
+        try {
+            const userData: LoginInputDTO = {
+                email: req.body.email,
+                password: req.body.password
+            }
+           
+            const userDatabase = new UserDatabase();
+            const user = await userDatabase.getByEmail(userData.email);
+
+            const hashManager = new HashManager();
+            const isPasswordCorrect = await hashManager.compare(userData.password, user.getPassword());
+
+            if(!isPasswordCorrect) {
+                throw new Error('Incorrect username or password');
+            }
+
+            const authenticator = new Authenticator();
+            const accessToken = authenticator.generateToken({id: user.getId()});
+
+            res.status(200). send({
+                message: 'User successfully logged in',
+                accessToken
+            })
+            
+        } catch (error) {
+            res.status(400).send({error: error.message});
+        }
+        await BaseDatabase.destroyConnection();
     }
 }

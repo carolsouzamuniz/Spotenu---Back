@@ -1,5 +1,5 @@
 import { BaseDatabase } from "./BaseDatabase";
-import { Type } from "../model/User";
+import { Type, User } from "../model/User";
 
 export class UserDatabase extends BaseDatabase {
     private static TABLE_NAME: string = "SPOTENU_Users";
@@ -32,5 +32,19 @@ export class UserDatabase extends BaseDatabase {
             throw new Error(error.sqlMessage || error.message);
         }
 
+    }
+
+    public async getByEmail(email: string): Promise<User>{
+        try {
+            const result = await this.getConnection()
+            .select('*')
+            .from(UserDatabase.TABLE_NAME)
+            .where({Email: email})
+        
+            return User.toUserModel(result[0]);
+
+        } catch (error) {
+            throw new Error(error.sqlMessage || error.message);
+        }
     }
 }
