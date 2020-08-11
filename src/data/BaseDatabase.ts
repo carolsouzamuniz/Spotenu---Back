@@ -34,6 +34,6 @@ export class BaseDatabase {
     }
 
     protected convertBooleanToInt(value: boolean): number{
-        return value? 1: 0;
+        return value? 1 : 0;
     }
 }

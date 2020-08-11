@@ -1,4 +1,5 @@
 import { IdGenerator } from "../service/IdGenerator"
+import { Type } from "../model/User";
 
 export class UserBusiness {
     public async signup(
@@ -6,7 +7,7 @@ export class UserBusiness {
         email: string,
         nickname: string,
         password: string,
-        type: string,
+        type: Type,
         description: string,
         isApproved: number
     ): Promise<string> {

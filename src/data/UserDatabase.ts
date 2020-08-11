@@ -1,7 +1,8 @@
 import { BaseDatabase } from "./BaseDatabase";
+import { Type } from "../model/User";
 
 export class UserDatabase extends BaseDatabase {
-    private static TABLE_NAME = "SPOTENU_Users";
+    private static TABLE_NAME: string = "SPOTENU_Users";
     
     public async signup(
         id: string,
@@ -9,21 +10,21 @@ export class UserDatabase extends BaseDatabase {
         email: string,
         nickname: string,
         password: string,
-        type: string,
+        type: Type,
         description: string,
         isApproved: number
-    ) {
+    ): Promise <void> {
         try {
-            await super.getConnection()
+            await this.getConnection()
             .insert({
-                id,
-                name,
-                email,
-                nickname,
-                password,
-                type,
-                description,
-                isApproved        
+                UserID: id,
+                Name: name,
+                Email: email,
+                Nickname: nickname,
+                Password: password,
+                Type: type,
+                Description: description,
+                IsApproved: isApproved
             })
             .into(UserDatabase.TABLE_NAME);
             

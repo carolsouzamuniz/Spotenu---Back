@@ -6,6 +6,7 @@ interface AuthenticationData{
 
 export class Authenticator {
     private static EXPIRES_IN = "60min"; 
+    
     public generateToken(input: AuthenticationData): string{
         const token = jwt.sign(
             { id: input.id },
@@ -16,11 +17,15 @@ export class Authenticator {
     }
 
     public getData(token: string): AuthenticationData{
-        const payload = jwt.verify(token, process.env.JWT_KEY as string ) as any;
+        const payload = jwt.verify(
+            token, 
+            process.env.JWT_KEY as string
+        ) as any;
+        
         const result: AuthenticationData = 
-        { id: payload.id }
+            { id: payload.id }
 
-        return result
+        return result;
     }
     
 }
