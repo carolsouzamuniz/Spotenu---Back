@@ -77,25 +77,18 @@ export class UserController{
                 email: req.body.email,
                 password: req.body.password
             }
-           
-            const userDatabase = new UserDatabase();
-            const user = await userDatabase.getByEmail(userData.email);
 
-            const hashManager = new HashManager();
-            const isPasswordCorrect = await hashManager.compare(userData.password, user.getPassword());
-
-            if(!isPasswordCorrect) {
-                throw new Error('Incorrect username or password');
-            }
-
-            const authenticator = new Authenticator();
-            const accessToken = authenticator.generateToken({id: user.getId()});
-
-            res.status(200). send({
-                message: 'User successfully logged in',
-                accessToken
-            })
+            const userBusiness = new UserBusiness();
+            const user = await userBusiness.getByEmail(userData);
             
+            const autheticator = new Authenticator();
+            const accessToken = autheticator.generateToken({id: user.getId()})
+            
+            res.status(200).send({
+                message: "User successfully registered",
+                token: accessToken
+            });
+             
         } catch (error) {
             res.status(400).send({error: error.message});
         }

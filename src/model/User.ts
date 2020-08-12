@@ -55,7 +55,7 @@ export class User{
         this.nickname = nickname
     }
     setPassword(password: string){
-        this.password = this.password
+        this.password = password
     }
     setType(type: Type){
         this.type = type
@@ -69,14 +69,14 @@ export class User{
 
     public static toUserModel(object: any): User{
         return new User(
-            object.id,
-            object.name,
-            object.email,
-            object.nickname,
-            object.password,
-            object.type,
-            object.description,
-            object.isApproved
+            object.UserID,
+            object.Name,
+            object.Email,
+            object.Nickname,
+            object.Password,
+            object.Type,
+            object.Description,
+            object.IsApproved
         )
     }
 }

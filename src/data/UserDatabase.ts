@@ -34,15 +34,15 @@ export class UserDatabase extends BaseDatabase {
 
     }
 
-    public async getByEmail(email: string): Promise<User>{
+    public async getByEmail(email: string): Promise<any>{
         try {
             const result = await this.getConnection()
             .select('*')
             .from(UserDatabase.TABLE_NAME)
             .where({Email: email})
-        
-            return User.toUserModel(result[0]);
 
+            return User.toUserModel(result[0]);
+            
         } catch (error) {
             throw new Error(error.sqlMessage || error.message);
         }
