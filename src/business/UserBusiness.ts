@@ -20,13 +20,11 @@ export class UserBusiness {
         return id;
     }
 
-    public async getByEmail(input: LoginInputDTO){
+    public async getByEmailOrNickname(input: LoginInputDTO){
 
         const userDatabase = new UserDatabase();
-        const user = await userDatabase.getByEmail(input.email);
+        const user = await userDatabase.getByEmailOrNickname(input.emailOrNickname);
         
-        console.log("user: ",user)
-
         const hashManager = new HashManager();
         const hashCompare = await hashManager.compare(input.password, user.getPassword());
         

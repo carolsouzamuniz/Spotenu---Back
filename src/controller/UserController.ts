@@ -74,12 +74,12 @@ export class UserController{
     public async login(req: Request, res: Response){
         try {
             const userData: LoginInputDTO = {
-                email: req.body.email,
+                emailOrNickname: req.body.emailOrNickname,
                 password: req.body.password
             }
 
             const userBusiness = new UserBusiness();
-            const user = await userBusiness.getByEmail(userData);
+            const user = await userBusiness.getByEmailOrNickname(userData);
             
             const autheticator = new Authenticator();
             const accessToken = autheticator.generateToken({id: user.getId()})
