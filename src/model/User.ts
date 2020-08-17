@@ -1,8 +1,8 @@
 export enum Type {
-    NORMAL_PAGANTE = "NORMAL PAGANTE",
-    NORMAL_NAO_PAGANTE = "NORMAL NAO PAGANTE",
+    NORMAL_PAGANTE = "Ouvinte pagante",
+    NORMAL_NAO_PAGANTE = "Ouvinte não pagante",
     ADMIN = "ADMIN",
-    BANDA = "BANDA"
+    BANDA = "Banda"
 };
 
 export class User{

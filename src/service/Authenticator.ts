@@ -1,7 +1,10 @@
 import * as jwt from "jsonwebtoken";
+import { stringify } from "querystring";
+import { Type } from "../model/User";
 
 interface AuthenticationData{
-    id: string
+    id: string,
+    type: Type
 }
 
 export class Authenticator {
@@ -9,7 +12,8 @@ export class Authenticator {
     
     public generateToken(input: AuthenticationData): string{
         const token = jwt.sign(
-            { id: input.id },
+            { id: input.id,
+              type: input.type },
             process.env.JWT_KEY as string,  
             { expiresIn: Authenticator.EXPIRES_IN }
         )
@@ -23,7 +27,10 @@ export class Authenticator {
         ) as any;
         
         const result: AuthenticationData = 
-            { id: payload.id }
+            { 
+                id: payload.id,
+                type: payload.type
+            }
 
         return result;
     }

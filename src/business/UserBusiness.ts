@@ -1,17 +1,31 @@
 import { IdGenerator } from "../service/IdGenerator"
-import { Type, LoginInputDTO, User } from "../model/User";
+import { Type, LoginInputDTO } from "../model/User";
 import { UserDatabase } from "../data/UserDatabase";
 import { HashManager } from "../service/HashManager";
 
 export class UserBusiness {
-    public async signup(
+    public async signupUser(
+        name: string,
+        email: string,
+        nickname: string,
+        password: string,
+        // type: Type,
+        // description: string,
+        // isApproved: number
+    ): Promise<string> {
+
+        const idGenerator = new IdGenerator();
+        const id = idGenerator.generate();
+        
+        return id;
+    }
+
+    public async signupAdmin(
         name: string,
         email: string,
         nickname: string,
         password: string,
         type: Type,
-        description: string,
-        isApproved: number
     ): Promise<string> {
 
         const idGenerator = new IdGenerator();
