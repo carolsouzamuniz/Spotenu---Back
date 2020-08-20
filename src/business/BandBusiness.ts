@@ -1,5 +1,9 @@
 import { IdGenerator } from "../service/IdGenerator";
 import { Type } from "../model/User";
+import { BandDatabase } from "../data/BandDatabase";
+import { HashManager } from "../service/HashManager";
+import { LoginBandInputDTO } from "../model/Band";
+import { BaseDatabase } from "../data/BaseDatabase";
 
 export class BandBusiness {
     public async signupBand(
@@ -15,6 +19,42 @@ export class BandBusiness {
         const id = idGenerator.generate();
 
         return id;
+    }
+
+    public async getById(id: string){
+
+        const bandDatabase = new BandDatabase();
+        const band = await bandDatabase.getById(id);
+        
+        if(!band) {
+            throw new Error ('banda não encontrada')
+        } 
+
+        if(band.getIsApproved() === 1) {
+            throw new Error ('usuário já aprovado')
+        }
+
+        return band;
+    }
+
+    public async approve (id: string) {
+        const bandDatabase = new BandDatabase();
+        await bandDatabase.approve(id);
+    }
+
+
+    public async getByEmailOrNickname(input: LoginBandInputDTO){
+
+        const bandDatabase = new BandDatabase();
+        const band = await bandDatabase.getByEmailOrNickname(input.emailOrNickname);
+        
+        const hashManager = new HashManager();
+        const hashCompare = await hashManager.compare(input.password, band.getPassword());
+        
+        if(!hashCompare){
+            throw new Error('Incorrect username or password');
+        }
+        return band;
     }
 
 }

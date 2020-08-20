@@ -3,6 +3,8 @@ import { BaseDatabase } from "../data/BaseDatabase";
 import { HashManager } from "../service/HashManager";
 import { BandDatabase } from "../data/BandDatabase";
 import { BandBusiness } from "../business/BandBusiness";
+import { Authenticator } from "../service/Authenticator";
+import { bandRouter } from "../routes/bandRouter";
 
 export class BandController {
     public async signupBand (req: Request, res: Response) {
@@ -52,7 +54,6 @@ export class BandController {
                 hashPassword,
                 bandData.description,
                 bandData.type
-                
             );
 
             res.status(200).send({
@@ -63,6 +64,58 @@ export class BandController {
             res.status(400).send({error: error.message});
         }
         await BaseDatabase.destroyConnection();
+    }
 
+    public async bandApproval(req: Request, res: Response) {
+        try {
+            const autheticator = new Authenticator();
+            const tokenData = autheticator.getData(req.headers.authenticator as string)
+            
+            if(tokenData.type !== "ADMIN"){
+                throw new Error('Only administrators can approve the band registration')
+            }
+            const bandBusiness = new BandBusiness();
+            const bandResult = await bandBusiness.getById(req.body.id);
+            console.log("banda do resultado: ", bandResult)
+            await bandBusiness.approve(bandResult.getId());
+            
+            res.status(200).send({
+                message: "Band successfully approved"
+            });
+        
+        } catch (error) {
+            res.status(400).send({error: error.message});
+        }
+        await BaseDatabase.destroyConnection();
+    }
+
+        
+    public async bandLogin(req: Request, res: Response){
+        try {
+            const bandData = {
+                emailOrNickname: req.body.emailOrNickname,
+                password: req.body.password,
+                type: req.body.type
+            }
+
+            const bandBusiness = new BandBusiness();
+            const band = await bandBusiness.getByEmailOrNickname(bandData);
+                        
+            // if(IsApproved === 0){
+            //     console.log("Your registration has not yet been approved by an administrator")
+            // }
+            
+            const autheticator = new Authenticator();
+            const accessToken = autheticator.generateToken({id: band.getId(), type: band.getType()})
+
+            res.status(200).send({
+                message: "User successfully registered",
+                token: accessToken
+            });
+             
+        } catch (error) {
+            res.status(400).send({error: error.message});
+        }
+        await BaseDatabase.destroyConnection();
     }
 }
