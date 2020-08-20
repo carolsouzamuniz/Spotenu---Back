@@ -31,6 +31,11 @@ export class BandController {
                 throw new Error("The password must contain at least 6 characters")
             }
 
+            if (!req.body.description || req.body.description === "") {
+                throw new Error("Make a short text that describes your band")
+            }
+
+
             const hashManager = new HashManager();
             const hashPassword = await hashManager.hash(bandData.password);
 
@@ -76,7 +81,7 @@ export class BandController {
             }
             const bandBusiness = new BandBusiness();
             const bandResult = await bandBusiness.getById(req.body.id);
-            console.log("banda do resultado: ", bandResult)
+
             await bandBusiness.approve(bandResult.getId());
             
             res.status(200).send({
@@ -89,33 +94,4 @@ export class BandController {
         await BaseDatabase.destroyConnection();
     }
 
-        
-    public async bandLogin(req: Request, res: Response){
-        try {
-            const bandData = {
-                emailOrNickname: req.body.emailOrNickname,
-                password: req.body.password,
-                type: req.body.type
-            }
-
-            const bandBusiness = new BandBusiness();
-            const band = await bandBusiness.getByEmailOrNickname(bandData);
-                        
-            // if(IsApproved === 0){
-            //     console.log("Your registration has not yet been approved by an administrator")
-            // }
-            
-            const autheticator = new Authenticator();
-            const accessToken = autheticator.generateToken({id: band.getId(), type: band.getType()})
-
-            res.status(200).send({
-                message: "User successfully registered",
-                token: accessToken
-            });
-             
-        } catch (error) {
-            res.status(400).send({error: error.message});
-        }
-        await BaseDatabase.destroyConnection();
-    }
 }

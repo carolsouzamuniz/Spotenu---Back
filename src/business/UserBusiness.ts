@@ -2,7 +2,6 @@ import { IdGenerator } from "../service/IdGenerator"
 import { Type, LoginInputDTO } from "../model/User";
 import { UserDatabase } from "../data/UserDatabase";
 import { HashManager } from "../service/HashManager";
-import { BandDatabase } from "../data/BandDatabase";
 
 export class UserBusiness {
     public async signupUser(
@@ -34,9 +33,8 @@ export class UserBusiness {
         
         return id;
     }
-    
-        public async getByEmailOrNickname(input: LoginInputDTO){
 
+    public async getByEmailOrNickname(input: LoginInputDTO){
         const userDatabase = new UserDatabase();
         const user = await userDatabase.getByEmailOrNickname(input.emailOrNickname);
         

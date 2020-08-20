@@ -3,7 +3,6 @@ import { Type } from "../model/User";
 import { BandDatabase } from "../data/BandDatabase";
 import { HashManager } from "../service/HashManager";
 import { LoginBandInputDTO } from "../model/Band";
-import { BaseDatabase } from "../data/BaseDatabase";
 
 export class BandBusiness {
     public async signupBand(
@@ -27,11 +26,11 @@ export class BandBusiness {
         const band = await bandDatabase.getById(id);
         
         if(!band) {
-            throw new Error ('banda não encontrada')
+            throw new Error ('Band not found')
         } 
 
         if(band.getIsApproved() === 1) {
-            throw new Error ('usuário já aprovado')
+            throw new Error ('User already approved')
         }
 
         return band;
@@ -41,7 +40,6 @@ export class BandBusiness {
         const bandDatabase = new BandDatabase();
         await bandDatabase.approve(id);
     }
-
 
     public async getByEmailOrNickname(input: LoginBandInputDTO){
 
