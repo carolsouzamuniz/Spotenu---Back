@@ -35,7 +35,6 @@ export class BandController {
                 throw new Error("Make a short text that describes your band")
             }
 
-
             const hashManager = new HashManager();
             const hashPassword = await hashManager.hash(bandData.password);
 
@@ -46,8 +45,8 @@ export class BandController {
                 bandData.nickname,
                 hashPassword,
                 bandData.description,
-                bandData.type,
-                
+                bandData.type,   
+                bandData.isApproved
             );
 
             const bandDatabase = new BandDatabase();
@@ -88,6 +87,26 @@ export class BandController {
                 message: "Band successfully approved"
             });
         
+        } catch (error) {
+            res.status(400).send({error: error.message});
+        }
+        await BaseDatabase.destroyConnection();
+    }
+
+    public async getList(req: Request, res: Response) {
+        try{
+            const autheticator = new Authenticator();
+            const tokenData = autheticator.getData(req.headers.authorization as string)
+            
+            if(tokenData.type !== "ADMIN"){
+                throw new Error('Only administrators have access to the list of bands')
+            }
+
+            const bandDatabase = new BandDatabase();
+            const band = await bandDatabase.getAllBands();
+
+            res.status(200).send(band);
+            
         } catch (error) {
             res.status(400).send({error: error.message});
         }

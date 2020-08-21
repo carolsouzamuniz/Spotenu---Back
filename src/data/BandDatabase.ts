@@ -1,7 +1,6 @@
 import { BaseDatabase } from "./BaseDatabase";
 import { Type } from "../model/User";
 import { Band } from "../model/Band";
-import { raw } from "express";
 
 export class BandDatabase extends BaseDatabase {
     private static TABLE_NAME: string = 'SPOTENU_Users';
@@ -48,6 +47,7 @@ export class BandDatabase extends BaseDatabase {
             throw new Error(error.sqlMessage || error.message);
         }
     }
+
     public async approve (id: string): Promise<void> {
         try {
             await this.getConnection().raw(`
@@ -61,18 +61,21 @@ export class BandDatabase extends BaseDatabase {
         }
     }
 
-    public async getByEmailOrNickname (emailOrNickname: string): Promise<any> {
+    public async getAllBands (): Promise<Band> {
         try {
-            const result = await this.getConnection()
-            .select('*')
-            .from(BandDatabase.TABLE_NAME)
-            .where({ Email: emailOrNickname }) 
-            .orWhere({ Nickname: emailOrNickname });
-             console.log(result[0])
-            return Band.toBandModel(result[0]);
-
+            const result = await this.getConnection().raw(`
+                SELECT * 
+                FROM ${BandDatabase.TABLE_NAME} 
+                WHERE Type="Banda"
+            `)
+            
+            return result[0].map((band: any): Band => {
+                return Band.toBandModel(band)
+            })
+      
         } catch (error) {
             throw new Error(error.sqlMessage || error.message);
         }
     }
+
 }

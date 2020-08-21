@@ -67,7 +67,7 @@ export class UserDatabase extends BaseDatabase {
             .from(UserDatabase.TABLE_NAME)
             .where({ Email: emailOrNickname }) 
             .orWhere({ Nickname: emailOrNickname });
-             console.log(result[0])
+             
             return User.toUserModel(result[0]);
 
         } catch (error) {

@@ -21,7 +21,7 @@ export class Band{
     getEmail(){
         return this.email
     }
-    getNichname(){
+    getNickname(){
         return this.nickname
     }
     getPassword(){

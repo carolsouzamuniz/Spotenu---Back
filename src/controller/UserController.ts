@@ -141,12 +141,15 @@ export class UserController{
             const userData = {
                 emailOrNickname: req.body.emailOrNickname,
                 password: req.body.password,
-                type: req.body.type
             }
-
+          
             const userBusiness = new UserBusiness();
             const user = await userBusiness.getByEmailOrNickname(userData);
-            
+              
+            if(user.type === "Banda" && user.isApproved !== 1){
+                throw new Error("Awaiting registration approval")
+            }
+
             const autheticator = new Authenticator();
             const accessToken = autheticator.generateToken({id: user.getId(), type: user.getType()})
             

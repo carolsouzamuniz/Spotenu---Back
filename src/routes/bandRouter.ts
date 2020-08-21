@@ -7,4 +7,7 @@ const bandController = new BandController();
 
 bandRouter.post('/signup', bandController.signupBand);
 bandRouter.post('/band-approval', bandController.bandApproval);
+bandRouter.get('/view-bands', bandController.getList);
+
+
 

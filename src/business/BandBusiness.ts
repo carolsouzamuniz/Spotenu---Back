@@ -11,8 +11,8 @@ export class BandBusiness {
         nickname: string,
         password: string,
         description: string,
-        type: Type
-        // isApproved: number
+        type: Type,
+        isApproved: number
     ): Promise <string> {
         const idGenerator = new IdGenerator();
         const id = idGenerator.generate();
@@ -32,7 +32,6 @@ export class BandBusiness {
         if(band.getIsApproved() === 1) {
             throw new Error ('User already approved')
         }
-
         return band;
     }
 
@@ -41,18 +40,8 @@ export class BandBusiness {
         await bandDatabase.approve(id);
     }
 
-    public async getByEmailOrNickname(input: LoginBandInputDTO){
-
+    public async getByType (type: Type) {
         const bandDatabase = new BandDatabase();
-        const band = await bandDatabase.getByEmailOrNickname(input.emailOrNickname);
-        
-        const hashManager = new HashManager();
-        const hashCompare = await hashManager.compare(input.password, band.getPassword());
-        
-        if(!hashCompare){
-            throw new Error('Incorrect username or password');
-        }
-        return band;
+        await bandDatabase.getAllBands();
     }
-
 }
