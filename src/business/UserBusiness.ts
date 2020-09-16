@@ -8,12 +8,8 @@ export class UserBusiness {
         name: string,
         email: string,
         nickname: string,
-        password: string,
-        // type: Type,
-        // description: string,
-        // isApproved: number
+        password: string
     ): Promise<string> {
-
         const idGenerator = new IdGenerator();
         const id = idGenerator.generate();
         

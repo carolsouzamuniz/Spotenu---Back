@@ -41,10 +41,7 @@ export class UserController{
                 userData.name,
                 userData.email,
                 userData.nickname,
-                hashPassword,
-                // userData.type,
-                // userData.description,
-                // userData.isApproved
+                hashPassword                
             );
 
             const userDatabase = new UserDatabase();
@@ -53,10 +50,7 @@ export class UserController{
                 userData.name,
                 userData.email,
                 userData.nickname,
-                hashPassword,
-                // userData.type,
-                // userData.description,
-                // userData.isApproved
+                hashPassword
             );
 
             const autheticator = new Authenticator();
@@ -138,15 +132,15 @@ export class UserController{
 
     public async login(req: Request, res: Response){
         try {
-            const userData = {
+            const userData: LoginInputDTO = {
                 emailOrNickname: req.body.emailOrNickname,
                 password: req.body.password,
             }
-          
+            
             const userBusiness = new UserBusiness();
             const user = await userBusiness.getByEmailOrNickname(userData);
               
-            if(user.type === "Banda" && user.isApproved !== 1){
+            if(user.getType() === "Banda" && user.getIsApproved() !== 1){
                 throw new Error("Awaiting registration approval")
             }
 
@@ -155,7 +149,8 @@ export class UserController{
             
             res.status(200).send({
                 message: "User successfully registered",
-                token: accessToken
+                token: accessToken,
+                type: user.getType()
             });
              
         } catch (error) {

@@ -26,7 +26,7 @@ export class User{
     getEmail(){
         return this.email
     }
-    getNichname(){
+    getNickname(){
         return this.nickname
     }
     getPassword(){
@@ -51,7 +51,7 @@ export class User{
     setEmail(email: string){
         this.email = email
     }
-    setNichname(nickname: string){
+    setNickname(nickname: string){
         this.nickname = nickname
     }
     setPassword(password: string){

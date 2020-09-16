@@ -60,7 +60,7 @@ export class UserDatabase extends BaseDatabase {
 
     }
 
-    public async getByEmailOrNickname (emailOrNickname: string): Promise<any> {
+    public async getByEmailOrNickname (emailOrNickname: string): Promise<User> {
         try {
             const result = await this.getConnection()
             .select('*')
