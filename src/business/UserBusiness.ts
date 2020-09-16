@@ -8,12 +8,8 @@ export class UserBusiness {
         name: string,
         email: string,
         nickname: string,
-        password: string,
-        // type: Type,
-        // description: string,
-        // isApproved: number
+        password: string
     ): Promise<string> {
-
         const idGenerator = new IdGenerator();
         const id = idGenerator.generate();
         
@@ -35,7 +31,6 @@ export class UserBusiness {
     }
 
     public async getByEmailOrNickname(input: LoginInputDTO){
-
         const userDatabase = new UserDatabase();
         const user = await userDatabase.getByEmailOrNickname(input.emailOrNickname);
         

@@ -1,11 +1,6 @@
-export enum Type {
-    NORMAL_PAGANTE = "Ouvinte pagante",
-    NORMAL_NAO_PAGANTE = "Ouvinte não pagante",
-    ADMIN = "ADMIN",
-    BANDA = "Banda"
-};
+import { Type } from "./User"
 
-export class User{
+export class Band{
     constructor(
         private id: string,
         private name: string,
@@ -51,7 +46,7 @@ export class User{
     setEmail(email: string){
         this.email = email
     }
-    setNickname(nickname: string){
+    setNichname(nickname: string){
         this.nickname = nickname
     }
     setPassword(password: string){
@@ -67,8 +62,8 @@ export class User{
         this.isApproved = isApproved
     }
 
-    public static toUserModel(object: any): User{
-        return new User(
+    public static toBandModel(object: any): Band{
+        return new Band(
             object.UserID,
             object.Name,
             object.Email,
@@ -81,7 +76,7 @@ export class User{
     }
 }
 
-export interface UserInputDTO {
+export interface BandInputDTO {
     name: string,
     email: string,
     nickname: string,
@@ -91,7 +86,7 @@ export interface UserInputDTO {
     isApproved: number
 }
 
-export interface LoginInputDTO {
+export interface LoginBandInputDTO {
     emailOrNickname: string,
     password: string
 }
