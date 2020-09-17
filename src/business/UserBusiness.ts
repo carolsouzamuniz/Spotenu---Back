@@ -16,20 +16,6 @@ export class UserBusiness {
         return id;
     }
 
-    public async signupAdmin(
-        name: string,
-        email: string,
-        nickname: string,
-        password: string,
-        type: Type,
-    ): Promise<string> {
-
-        const idGenerator = new IdGenerator();
-        const id = idGenerator.generate();
-        
-        return id;
-    }
-
     public async getByEmailOrNickname(input: LoginInputDTO){
         const userDatabase = new UserDatabase();
         const user = await userDatabase.getByEmailOrNickname(input.emailOrNickname);

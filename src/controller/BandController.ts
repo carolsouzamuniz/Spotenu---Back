@@ -5,18 +5,17 @@ import { BandDatabase } from "../data/BandDatabase";
 import { BandBusiness } from "../business/BandBusiness";
 import { Authenticator } from "../service/Authenticator";
 import { BandInputDTO } from "../model/Band";
+import { IdGenerator } from "../service/IdGenerator";
 
 export class BandController {
     public async signupBand (req: Request, res: Response) {
         try {
-            const bandData: BandInputDTO = {
+            const bandData = {
                 name: req.body.name,
                 email: req.body.email,
                 nickname: req.body.nickname,
                 password: req.body.password,
-                type: req.body.type,
                 description: req.body.description,
-                isApproved: req.body.isApproved
             }
 
             if (!req.body.name || req.body.name === "") {
@@ -39,26 +38,17 @@ export class BandController {
             const hashManager = new HashManager();
             const hashPassword = await hashManager.hash(bandData.password);
 
-            const bandBusiness = new BandBusiness();
-            const bandId = await bandBusiness.signupBand(
-                bandData.name,
-                bandData.email,
-                bandData.nickname,
-                hashPassword,
-                bandData.description,
-                bandData.type,   
-                bandData.isApproved
-            );
-
+            const idGenerator = new IdGenerator();
+            const id = idGenerator.generate();
+    
             const bandDatabase = new BandDatabase();
             await bandDatabase.signupBand(
-                bandId,
+                id,
                 bandData.name,
                 bandData.email,
                 bandData.nickname,
                 hashPassword,
                 bandData.description,
-                bandData.type
             );
 
             res.status(200).send({
@@ -68,7 +58,6 @@ export class BandController {
         } catch (error) {
             res.status(400).send({error: error.message});
         }
-        await BaseDatabase.destroyConnection();
     }
 
     public async bandApproval(req: Request, res: Response) {
@@ -111,7 +100,6 @@ export class BandController {
         } catch (error) {
             res.status(400).send({error: error.message});
         }
-        await BaseDatabase.destroyConnection();
     }
 
 }

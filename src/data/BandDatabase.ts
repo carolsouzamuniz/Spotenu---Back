@@ -12,7 +12,6 @@ export class BandDatabase extends BaseDatabase {
         nickname: string,
         password: string,
         description: string,
-        type: Type
         
     ): Promise <void> {
         try {
@@ -24,7 +23,7 @@ export class BandDatabase extends BaseDatabase {
                 Nickname: nickname,
                 Password: password,
                 Description: description,
-                Type: type
+                Type: "Banda"
                 
             })
             .into(BandDatabase.TABLE_NAME);
