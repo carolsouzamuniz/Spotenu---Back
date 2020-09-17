@@ -63,7 +63,6 @@ export class UserController{
         } catch (error) {
             res.status(400).send({error: error.message});
         }
-        await BaseDatabase.destroyConnection();
     }
 
     public async signupAdmin (req: Request, res: Response){
@@ -73,7 +72,6 @@ export class UserController{
                 email: req.body.email,
                 nickname: req.body.nickname,
                 password: req.body.password,
-                type: req.body.type,
             }
 
             if (!req.body.name || req.body.name === "") {
@@ -87,6 +85,13 @@ export class UserController{
             if (!req.body.password || req.body.password.length < 10) {
                 throw new Error("The password must contain at least 10 characters")
             }
+
+            const autheticator = new Authenticator();
+            const tokenData = autheticator.getData(req.headers.authorization as string)
+            
+            if(tokenData.type !== "ADMIN"){
+                throw new Error('Only administrator can register another administrator')
+            }    
                        
             const hashManager = new HashManager();
             const hashPassword = await hashManager.hash(userData.password);
@@ -94,32 +99,15 @@ export class UserController{
             const idGenerator = new IdGenerator();
             const id = idGenerator.generate(); 
 
-            const userBusiness = new UserBusiness();
-            const userId = await userBusiness.signupAdmin(
+            const userDatabase = new UserDatabase();
+            await userDatabase.signupAdmin(
                 id,
                 userData.name,
                 userData.email,
                 userData.nickname,
-                userData.type,
-            );
-
-            const userDatabase = new UserDatabase();
-            await userDatabase.signupAdmin(
-                userId,
-                userData.name,
-                userData.email,
-                userData.nickname,
                 hashPassword,
-                userData.type
             );
 
-            const autheticator = new Authenticator();
-            const tokenData = autheticator.getData(req.headers.authenticator as string)
-            
-            if(tokenData.type !== "ADMIN"){
-                throw new Error('Only administrator can register another administrator')
-            }
-            
             res.status(200).send({
                 message: "User successfully registered"
             });
@@ -127,7 +115,6 @@ export class UserController{
         } catch (error) {
             res.status(400).send({error: error.message});
         }
-        await BaseDatabase.destroyConnection();
     }
 
     public async login(req: Request, res: Response){
@@ -156,6 +143,5 @@ export class UserController{
         } catch (error) {
             res.status(400).send({error: error.message});
         }
-        await BaseDatabase.destroyConnection();
     }
 }

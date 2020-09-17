@@ -40,7 +40,6 @@ export class UserDatabase extends BaseDatabase {
         email: string,
         nickname: string,
         password: string,
-        type: Type,
     ): Promise <void> {
         try {
             await this.getConnection()
@@ -50,14 +49,13 @@ export class UserDatabase extends BaseDatabase {
                 Email: email,
                 Nickname: nickname,
                 Password: password,
-                Type: type
+                Type: "ADMIN"
             })
             .into(UserDatabase.TABLE_NAME);
-            
+                      
         } catch (error) {
             throw new Error(error.sqlMessage || error.message);
         }
-
     }
 
     public async getByEmailOrNickname (emailOrNickname: string): Promise<User> {
